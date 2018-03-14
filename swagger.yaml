@@ -1,0 +1,151 @@
+# Preview this API at http://editor.swagger.io/
+
+swagger: "2.0"
+info:
+  description: "**dribdat** is an open source platform for Hackathons with Impact, allowing organizers to complement event information with bootstraps and data resources, augment their capabilities by tracking progress of teams, and collect timestamped documentation of releases and activities from across multiple design, rapid prototyping and development platforms. \n\n This is a proposal for a rewrite of the code base with an API-first approach. The [original API](https://github.com/loleg/dribdat#api) was written in [Python](https://github.com/loleg/dribdat/blob/master/dribdat/public/api.py) and consumed in a [Coffeescript](https://github.com/loleg/sodabot/blob/master/scripts/dribdat.coffee) chatbot. Find out more in the [ABOUT page](https://github.com/loleg/dribdat/blob/master/ABOUT.md) or talk to us in the [ttn-ch Slack](https://ttn-ch.herokuapp.com/) at #dribdat"
+  version: "2.0.0"
+  title: "dribdat"
+  termsOfService: ""
+  contact:
+    email: "open@datalets.ch"
+  license:
+    name: "MIT"
+    url: "https://raw.githubusercontent.com/open-network-infrastructure/dribdat-api/master/LICENSE"
+host: "now.makezurich.ch"
+basePath: "/v2"
+tags:
+- name: "project"
+  description: "A hackathon project with its team and releases"
+  externalDocs:
+    description: "E.g."
+    url: "https://now.makezurich.ch/project/13"
+- name: "event"
+  description: "Information about the event and its projects"
+  externalDocs:
+    description: "E.g."
+    url: "https://now.makezurich.ch/event/1"
+- name: "user"
+  description: "Profile of a participant, their events and projects"
+schemes:
+- "http"
+paths:
+  /project:
+    post:
+      tags:
+      - "project"
+      summary: "Add a project to an event"
+      responses:
+        405:
+          description: "Invalid input"
+      
+definitions:
+  Release:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      projectId:
+        type: "integer"
+        format: "int64"
+      timestamp:
+        type: "string"
+        format: "date-time"
+      html:
+        type: "string"
+      url:
+        type: "string"
+      status:
+        type: "string"
+        description: "Release Type"
+        enum:
+        - "idea"
+        - "team"
+        - "sketch"
+        - "wireframe"
+        - "commit"
+        - "readme"
+        - "presentation"
+        - "publication"
+        - "launch"
+        - "capture"
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+  User:
+    type: "object"
+    required:
+    - "username"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      password:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      contact:
+        type: "string"
+      url:
+        type: "string"
+  Project:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        example: "HackrCar"
+      tagline:
+        type: "string"
+        example: "An Uber for Hackathons"
+      category:
+        $ref: "#/definitions/Category"
+      releases:
+        type: "array"
+        items:
+          $ref: "#/definitions/Release"
+      team:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+  Event:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      markdown:
+        type: "string"
+      beginDate:
+        type: "string"
+        format: "date-time"
+      finishDate:
+        type: "string"
+        format: "date-time"
+      team:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+      infoUrl:
+        type: "string"
+      joinUrl:
+        type: "string"
+      contactUrl:
+        type: "string"
